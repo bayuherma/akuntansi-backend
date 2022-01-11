@@ -1,0 +1,45 @@
+User
+1. company_name
+2. phone
+3. address
+
+ProductCategory
+1. name
+
+ProductUnit
+1. name
+
+Product
+1. code
+2. name
+3. purchase_price
+4. selling_price
+5. packaging
+6. margin
+7. discount
+8. stock
+9. tags
+10. ProductCategory
+11. ProductUnit
+
+ProductGallery
+1. Product
+2. url
+
+Customer
+1. code
+2. name
+
+SalesTransaction
+1. Customer
+2. code
+3. sale_date
+4. total_price
+5. status
+6. paid_off
+
+DetailTransaction
+1. Customer
+2. Product
+3. SalesTransaction
+4. quantity
