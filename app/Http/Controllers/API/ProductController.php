@@ -5,6 +5,9 @@ namespace App\Http\Controllers\API;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\ProductCategory;
+use App\Models\ProductUnit;
+use Exception;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -57,5 +60,43 @@ class ProductController extends Controller
             $product->paginate($limit),
             'Data produk berhasil diambil'
         );
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            $request->validate([
+                'code' =>'required|string|max:255',
+                'name' =>'required|string|max:255',
+                'selling_price' => 'required',
+                'stock' => 'required',
+                'categories_id' => 'required',
+                'units_id' => 'required'
+            ]);
+
+            $product = Product::create([
+                'code' => $request->code,
+                'name' => $request->name,
+                'selling_price' => $request->selling_price,
+                'stock' => $request->stock,
+                'categories_id' => ProductCategory::find($request->categories_id)->id,
+                'units_id' => ProductUnit::find($request->units_id)->id,
+            ]);
+
+            return ResponseFormatter::success([
+                'product' => $product,
+            ], 'Berhasil tambah produk');
+
+
+        } catch (Exception $error) {
+            return ResponseFormatter::error(
+                [
+                    'message' => 'Something went wrong',
+                    'error' => $error,
+                ],
+                'Gagal tambah produk',
+                500
+            );
+        }
     }
 }

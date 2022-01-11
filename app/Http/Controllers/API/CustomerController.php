@@ -6,6 +6,7 @@ use App\Models\Customer;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use Exception;
 
 class CustomerController extends Controller
 {
@@ -47,5 +48,35 @@ class CustomerController extends Controller
             $customer->paginate($limit),
             'Data kategori berhasil diambil'
         );
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            $request->validate([
+                'code' =>'required|string|max:255',
+                'name' =>'required|string|max:255',
+            ]);
+
+            $customer = Customer::create([
+                'code' => $request->code,
+                'name' => $request->name,
+            ]);
+
+            return ResponseFormatter::success([
+                'customer' => $customer,
+            ], 'Berhasil tambah customer');
+
+
+        } catch (Exception $error) {
+            return ResponseFormatter::error(
+                [
+                    'message' => 'Something went wrong',
+                    'error' => $error,
+                ],
+                'Gagal tambah customer',
+                500
+            );
+        }
     }
 }

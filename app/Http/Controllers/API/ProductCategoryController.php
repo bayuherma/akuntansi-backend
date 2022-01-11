@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\ProductCategory;
+use Exception;
 
 class ProductCategoryController extends Controller
 {
@@ -46,5 +47,33 @@ class ProductCategoryController extends Controller
             $category->paginate($limit),
             'Data kategori berhasil diambil'
         );
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            $request->validate([
+                'name' =>'required|string|max:255',
+            ]);
+
+            $category = ProductCategory::create([
+                'name' => $request->name,
+            ]);
+
+            return ResponseFormatter::success([
+                'category' => $category,
+            ], 'Berhasil tambah kategori');
+
+
+        } catch (Exception $error) {
+            return ResponseFormatter::error(
+                [
+                    'message' => 'Something went wrong',
+                    'error' => $error,
+                ],
+                'Gagal tambah kategori',
+                500
+            );
+        }
     }
 }

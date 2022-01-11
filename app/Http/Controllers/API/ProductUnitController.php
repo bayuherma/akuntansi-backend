@@ -6,6 +6,7 @@ use App\Models\ProductUnit;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use Exception;
 
 class ProductUnitController extends Controller
 {
@@ -47,5 +48,33 @@ class ProductUnitController extends Controller
             $unit->paginate($limit),
             'Data satuan berhasil diambil'
         );
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            $request->validate([
+                'name' =>'required|string|max:255',
+            ]);
+
+            $unit = ProductUnit::create([
+                'name' => $request->name,
+            ]);
+
+            return ResponseFormatter::success([
+                'unit' => $unit,
+            ], 'Berhasil tambah satuan');
+
+
+        } catch (Exception $error) {
+            return ResponseFormatter::error(
+                [
+                    'message' => 'Something went wrong',
+                    'error' => $error,
+                ],
+                'Gagal tambah satuan',
+                500
+            );
+        }
     }
 }

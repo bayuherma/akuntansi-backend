@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\CustomerController;
 use App\Http\Controllers\API\ProductCategoryController;
 use App\Http\Controllers\API\ProductController;
+use App\Http\Controllers\API\ProductGalleryController;
 use App\Http\Controllers\API\ProductUnitController;
 use App\Http\Controllers\API\SalesTransactionsController;
 use App\Http\Controllers\API\UserController;
@@ -36,6 +37,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('user', [UserController::class, 'fetch']);
     Route::post('user', [UserController::class, 'updateProfile']);
     Route::post('logout', [UserController::class, 'logout']);
+
+    Route::post('categories/store', [ProductCategoryController::class, 'store']);
+
+    Route::post('units/store', [ProductUnitController::class, 'store']);
+    
+    Route::post('products/store', [ProductController::class, 'store']);
+    
+    Route::post('customers/store', [CustomerController::class, 'store']);
+
+    Route::post('gallery/store', [ProductGalleryController::class, 'store']);
 
     Route::get('sales',[SalesTransactionsController::class, 'all']);
     Route::post('sales-transaction',[SalesTransactionsController::class, 'transaction']);
