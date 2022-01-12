@@ -77,8 +77,13 @@ class ProductController extends Controller
             $product = Product::create([
                 'code' => $request->code,
                 'name' => $request->name,
+                'purchase_price' => $request->purchase_price,
                 'selling_price' => $request->selling_price,
+                'packaging' => $request->packaging,
+                'margin' => $request->margin,
+                'discount' => $request->discount,
                 'stock' => $request->stock,
+                'tags' => $request->tags,
                 'categories_id' => ProductCategory::find($request->categories_id)->id,
                 'units_id' => ProductUnit::find($request->units_id)->id,
             ]);
@@ -95,6 +100,38 @@ class ProductController extends Controller
                     'error' => $error,
                 ],
                 'Gagal tambah produk',
+                500
+            );
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'name' =>'required|string|max:255',
+                'selling_price' => 'required',
+                'stock' => 'required',
+                'categories_id' => 'required',
+                'units_id' => 'required'
+            ]);
+
+            $product = Product::find($id);
+            $data = $request->all();
+            $product->update($data);
+
+            return ResponseFormatter::success([
+                'product' => $product,
+            ], 'Berhasil update produk');
+
+
+        } catch (Exception $error) {
+            return ResponseFormatter::error(
+                [
+                    'message' => 'Something went wrong',
+                    'error' => $error,
+                ],
+                'Gagal update produk',
                 500
             );
         }

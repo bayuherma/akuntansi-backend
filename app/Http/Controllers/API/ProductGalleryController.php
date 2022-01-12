@@ -11,21 +11,34 @@ use Exception;
 
 class ProductGalleryController extends Controller
 {
-    public function store(Request $request, Product $product)
+    public function store(Request $request)
     {
         try {
-            $files = $request->file('files');
-
-            if ($request->hasFile('files')) {
-                foreach ($files as $file) {
-                    $path = $file->store('public/gallery');
-
-                    ProductGallery::create([
-                        'products_id' => $product->id,
-                        'url' => $path
-                    ]);
-                }
+            $image = new ProductGallery();
+            
+            $image->products_id = Product::find($request->products_id)->id;
+            if ($request->hasFile('image')) {
+                $path = $request->file('image')->store('images');
+                $image->url = $path;
             }
+            $image->save();
+
+
+            // $image = $request->file('image');
+
+            // if ($request->hasFile('image')) {
+            //     foreach ($image as $file) {
+            //         $path = $file->store('public/gallery');
+
+            //         ProductGallery::create([
+            //             'products_id' => $product->id,
+            //             'url' => $path
+            //         ]);
+            //     }
+            // }
+
+            // return dd($image);
+
 
             return ResponseFormatter::success(
                 [
@@ -34,6 +47,7 @@ class ProductGalleryController extends Controller
                 'Berhasil tambah gallery'
             );
         } catch (Exception $error) {
+            // return dd($image);
             return ResponseFormatter::error(
                 [
                     'message' => 'Something went wrong',

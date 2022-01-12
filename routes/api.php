@@ -43,6 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('units/store', [ProductUnitController::class, 'store']);
     
     Route::post('products/store', [ProductController::class, 'store']);
+    Route::post('products/update/{id}', [ProductController::class, 'update']);
     
     Route::post('customers/store', [CustomerController::class, 'store']);
 
